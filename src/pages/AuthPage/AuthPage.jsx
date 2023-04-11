@@ -21,6 +21,9 @@ export default function AuthPage({ setUser }) {
       <LogInForm setUser={ setUser }/>
 
       }
+      <section className='Comments'>
+      
+      </section>
     </main>
     
   );
