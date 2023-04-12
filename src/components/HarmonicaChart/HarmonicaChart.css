@@ -1,3 +1,7 @@
+* {
+    font-size: 16px;
+}
+
 #chart {
     box-sizing: border-box;
     border-collapse: collapse;
@@ -9,15 +13,48 @@
     flex-wrap: wrap;
     margin: auto;
     /* font-size: 62px; */
-    background-color: antiquewhite;
-    border: solid blue 2px;
+    /* background-color: antiquewhite; */
+    /* border: solid blue 2px; */
     /* transform: rotate(90deg); */
 }
 
 #chart div {
     margin: 0;
-    border: solid limegreen 3px;
+    border: solid rgb(255, 255, 255) 3px;
     width: 50px;
     height: 50px;
+    padding-top: 12px;
     /* transform: rotate(270deg); */
+}
+
+#settings {
+    width: 700px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+}
+
+.setting {
+    border: 1px solid white;
+    width: 12rem;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.highlighted {
+    background-color: yellowgreen;
+}
+
+#layout {
+    width: 700px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
