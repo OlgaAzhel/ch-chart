@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import * as userService from "../../utilities/users-service"
-
+import MyStudioPage from '../../pages/MyStudioPage/MyStudioPage'
+import MainPage from '../../pages/MainPage/MainPage';
 export default function NavBar({ user, setUser }) {
   function handleLogOut() {
     userService.logOut()
@@ -8,9 +9,9 @@ export default function NavBar({ user, setUser }) {
   }
   return (
     <nav>
-      <Link to="/orders">Order History</Link>
+      <Link to="/mystudio" element={<MyStudioPage />}>My Studio</Link>
       &nbsp; | &nbsp;
-      <Link to="/orders/new">New Order</Link>
+      <Link to="/" element={<MainPage />}>Main</Link>
       &nbsp; | &nbsp;
       <span>Welcome, {user.name} !</span>
       &nbsp; | &nbsp;
