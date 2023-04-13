@@ -5,8 +5,8 @@
 #chart {
     box-sizing: border-box;
     border-collapse: collapse;
-    width: 210px;
-    height: 210px;
+    width: 330px;
+    height: 330px;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -21,14 +21,14 @@
 #chart div {
     margin: 0;
     border: solid rgb(255, 255, 255) 3px;
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     padding-top: 12px;
     /* transform: rotate(270deg); */
 }
 
 #settings {
-    width: 700px;
+    width: 1000px;
     margin: auto;
     display: flex;
     flex-direction: row;
@@ -52,9 +52,16 @@
 }
 
 #layout {
-    width: 700px;
+    width: 1000px;
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+}
+
+.note-span {
+    font-size: larger;
+    background-color: yellow;
+    margin-left: 1rem;
+    
 }

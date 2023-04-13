@@ -8,7 +8,7 @@ const reorderBaseNotesByKey = (key) => {
     const part1 = baseNotes.slice(index)
     const part2 = baseNotes.slice(0, index)
     const result = part1.concat(part2)
-    console.log('notes in key of:', key, ' ', result);
+    console.log('notes in harmonicas key of:', key, ' ', result);
     return result
 }
 
@@ -43,11 +43,9 @@ function notesFinder(playKey, scale) {
     console.log("We are going to play in key of:",currentNote)
     for (let i = 0; i < scales[scale].length - 1; i++) {
         let noteStep = noteSteps.find((n) => { return n.note === currentNote })
-        console.log("Notestep",noteStep)
         playNotes.push(noteStep[scales[scale][i]])
         currentNote = noteStep[scales[scale][i]]
     }
-    console.log(playNotes)
     return playNotes
 }
 

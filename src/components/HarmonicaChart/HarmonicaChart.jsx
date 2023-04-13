@@ -13,9 +13,6 @@ export default function HarmonicaChart() {
     const notes = harmonicaService.reorderBaseNotesByKey(harmonicaKey)
 
 
-
-
-
     function harmonicaKeyChange(evt) {
         const newHarmonicaKey = evt.target.value
         setHarmonicaKey(newHarmonicaKey)
@@ -31,7 +28,7 @@ export default function HarmonicaChart() {
         setPlayNotes(harmonicaService.notesFinder(newPlayKey, scale))
     }
 
-    console.log("THIS IS PLAY KEY:", playKey, "THIS IS PLAY SCALE:", harmonicaService.scales[scale])
+
     console.log("THESE ARE PLAY NOTES", playNotes)
 
 
@@ -54,56 +51,75 @@ export default function HarmonicaChart() {
     let currentHighlighted = currentFullNotesLayout.filter(note => {
         return playNotes.includes(note.note)
     })
-    console.log("FULL LAYOUT:", currentFullNotesLayout)
+ 
     console.log("ALL HIGHLIGHTED:", currentHighlighted)
+    console.log("ALL NOTES IN PLAY:", playNotes)
 
 
 
 
-    let noteSequence = []
-    function noteSequenceFinder(notesInPlay, highlighted) {
+    function resultSequenceFinder(notesInPlay, highlighted) {
+        let noteSequence = []
         let prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
         let divider = highlighted.length / 3
-        let blockOne = highlighted.slice(0, divider)
+        let blockOneHighlighted = highlighted.slice(0, divider)
 
-        let blockTwo = highlighted.slice(divider, divider * 2)
+        let blockTwoHighlighted = highlighted.slice(divider, divider * 2)
 
-        let blockThree = highlighted.slice(divider * 2)
+        let blockThreeHighlighted = highlighted.slice(divider * 2)
+
+        let dictionary = {}
 
         for (let i = 0; i < notesInPlay.length; i++) {
-            console.log("LOOKING FOR NOTE:", notesInPlay[i])
-            for (let j = 0; j < blockOne.length; j++) {
-                if (notesInPlay[i] === blockOne[j].note) {
-                    // console.log(prefferedPositions.includes(blockOne[j + 1].pos), blockOne[j].note, blockOne[j].pos)
-                 
-                        if (blockOne[j + 1] && notesInPlay[i] === blockOne[j + 1].note && prefferedPositions.includes(blockOne[j + 1].pos)) {
-                            noteSequence.push(blockOne[j + 1])
-                            i++
-                        } else {
-                            noteSequence.push(blockOne[j])
-                            console.log("Adding note ", blockOne[j], i)
-                            i++
-                        }
+            let lookingForNote = notesInPlay[i]
+            let order = i + 1
+            dictionary[order] = lookingForNote
+        }
+        console.log("THIS IS DIC", dictionary)
+        let order = 1
+        for (let j = 0; j < blockOneHighlighted.length; j++) {
+            if (blockOneHighlighted[j].note === dictionary[order.toString()]) {
+                // if current j is the last highlighted and it is outside the prefferred - check if the first in the next block's first matches the note is currently being searched
+                if (j === blockOneHighlighted.length - 1 && !prefferedPositions.includes(blockOneHighlighted[j].pos) && prefferedPositions.includes(blockTwoHighlighted[0].pos)) {
+                    noteSequence.push(blockTwoHighlighted[0])
+                    order++
+                // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                } else if (blockOneHighlighted[j + 1] && blockOneHighlighted[j + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockOneHighlighted[j + 1].pos)) {
+                    noteSequence.push(blockOneHighlighted[j + 1])
+                    order++
+                } else {
+                    noteSequence.push(blockOneHighlighted[j])
+                    order++
                 }
-
-                if (j === blockOne.length-1 && i < notesInPlay.length) {
-                    console.log("here!!! Looking for note:", notesInPlay[i])
-                    for (let j = 0; j < blockTwo.length; j++) {
-                        if (notesInPlay[i] === blockTwo[j].note) {
-                            noteSequence.push(blockTwo[j])
-                            i++
+            }
+            // if the last highlighted block cell does not mtch the note currently beign searched for, should check the next block
+            if (j === blockOneHighlighted.length - 1 && blockOneHighlighted[j] !== dictionary[order.toString()]) {
+                // repeat lojic inside the j loop:
+                for (let k = 0; k < blockTwoHighlighted.length; k++) {
+                    // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                    if (blockTwoHighlighted[k].note === dictionary[order.toString()]) {
+                        // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                        if (blockTwoHighlighted[k + 1] && blockTwoHighlighted[k + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockTwoHighlighted[k + 1].pos)) {
+                            noteSequence.push(blockTwoHighlighted[k + 1])
+                            order++
+                        } else {
+                            noteSequence.push(blockTwoHighlighted[k])
+                            order++
                         }
                     }
                 }
             }
-
         }
+        
+        return noteSequence
 
     }
 
 
-    noteSequenceFinder(playNotes, currentHighlighted)
-    console.log("Note Sequence:", noteSequence)
+    let resultSequence = resultSequenceFinder(playNotes, currentHighlighted)
+    console.log("Note Sequence:", resultSequence)
+
+
 
 
 
@@ -147,6 +163,7 @@ export default function HarmonicaChart() {
                         value={playKey}
 
                     >
+                        
                         {
                             harmonicaService.baseNotes.map((k, idx) => {
                                 return <option key={idx}>{k}</option>
@@ -155,8 +172,8 @@ export default function HarmonicaChart() {
                     </select>
                 </div>
             </section>
+            <h4>{playNotes.map(n => <span className="note-span">{n}</span>)}</h4>
             <section id="layout">
-
 
                 <div id='chart'>
 
@@ -170,6 +187,27 @@ export default function HarmonicaChart() {
                                     key={idx}
                                     id={`1${idx + 1}`}
                                 >
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 1
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔸
+                                        </span>
+                                    }
+
                                     {notes[i - 1]}
                                 </div>
                                 }
@@ -195,6 +233,26 @@ export default function HarmonicaChart() {
                                     key={idx}
                                     id={`2${idx + 1}`}
                                 >
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 2
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 2
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔸
+                                        </span>
+                                    }
                                     {notes[i - 1]}
                                 </div>
                                 }
@@ -220,6 +278,26 @@ export default function HarmonicaChart() {
                                     key={idx}
                                     id={`3${idx + 1}`}
                                 >
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 3
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 3
+                                        })
+
+                                        && <span
+                                            className='note'>
+                                            🔸
+                                        </span>
+                                    }
                                     {notes[i - 1]}
                                 </div>
                                 }
