@@ -41,7 +41,7 @@ export default function HarmonicaChart() {
     fullPattern.map((i, idx) => {
         if (idx <= 15) {
             currentFullNotesLayout.push({ 'note': i, 'block': 1, 'pos': idx + 1 })
-        } else if (idx > 15 && idx <= 32) {
+        } else if (idx > 15 && idx < 32) {
             currentFullNotesLayout.push({ 'note': i, 'block': 2, 'pos': idx - 16 + 1 })
         } else {
             currentFullNotesLayout.push({ 'note': i, 'block': 3, 'pos': idx - 32 + 1 })
@@ -51,7 +51,7 @@ export default function HarmonicaChart() {
     let currentHighlighted = currentFullNotesLayout.filter(note => {
         return playNotes.includes(note.note)
     })
- 
+
     console.log("ALL HIGHLIGHTED:", currentHighlighted)
     console.log("ALL NOTES IN PLAY:", playNotes)
 
@@ -67,6 +67,7 @@ export default function HarmonicaChart() {
         let blockTwoHighlighted = highlighted.slice(divider, divider * 2)
 
         let blockThreeHighlighted = highlighted.slice(divider * 2)
+        console.log(blockOneHighlighted, blockTwoHighlighted, blockThreeHighlighted)
 
         let dictionary = {}
 
@@ -76,14 +77,53 @@ export default function HarmonicaChart() {
             dictionary[order] = lookingForNote
         }
         console.log("THIS IS DIC", dictionary)
+
+
         let order = 1
         for (let j = 0; j < blockOneHighlighted.length; j++) {
+            console.log("SEARCHING FOR", dictionary[order.toString()], "J;", j)
+            // if we are looking for 'G#Ab' after 'G' look backwards 
+            if (blockOneHighlighted[j - 2] && dictionary[order.toString()] === blockOneHighlighted[j - 2].note && blockOneHighlighted[j].note !== dictionary[order.toString()]) {
+                console.log("++++++++++")
+                noteSequence.push(blockOneHighlighted[j - 2])
+                order++
+
+            }
+
+
             if (blockOneHighlighted[j].note === dictionary[order.toString()]) {
+
+                // if current search note is in not preffered area, check if the same note exists in preferred area ahead, but before the next search note
+
+                if (!prefferedPositions.includes(blockOneHighlighted[j].pos)) {
+                    console.log("trying to find in the preffered ahead", blockOneHighlighted[j].note, "NEXT:", dictionary[(order + 1).toString()])
+
+
+
+                    for (let k = j + 1; k < j+ 3; k++) {
+                        let searchNote = dictionary[order.toString()]
+
+                        if (blockOneHighlighted[k]) {
+                            if (blockOneHighlighted[k] && blockOneHighlighted[k].note === searchNote) {
+                            console.log("PUSHING NEXT MATCHING INSIDE PREFFERED:", blockOneHighlighted[k])
+                            noteSequence.push(blockOneHighlighted[k])
+                            order++
+                            k = j + 3
+
+
+                        }
+                        }
+                        k++
+                    }
+
+
+                }
+
                 // if current j is the last highlighted and it is outside the prefferred - check if the first in the next block's first matches the note is currently being searched
-                if (j === blockOneHighlighted.length - 1 && !prefferedPositions.includes(blockOneHighlighted[j].pos) && prefferedPositions.includes(blockTwoHighlighted[0].pos)) {
+                else if (j === blockOneHighlighted.length - 1 && !prefferedPositions.includes(blockOneHighlighted[j].pos) && prefferedPositions.includes(blockTwoHighlighted[0].pos)) {
                     noteSequence.push(blockTwoHighlighted[0])
                     order++
-                // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                    // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
                 } else if (blockOneHighlighted[j + 1] && blockOneHighlighted[j + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockOneHighlighted[j + 1].pos)) {
                     noteSequence.push(blockOneHighlighted[j + 1])
                     order++
@@ -110,7 +150,127 @@ export default function HarmonicaChart() {
                 }
             }
         }
-        
+        // the same for block two: 
+        order = 1
+        for (let j = 0; j < blockTwoHighlighted.length; j++) {
+            // if we are looking for 'G#Ab' after 'G' look backwards 
+            if (blockTwoHighlighted[j - 2] && dictionary[order.toString()] === blockTwoHighlighted[j - 2].note && blockOneHighlighted[j].note !== dictionary[order.toString()]) {
+                noteSequence.push(blockTwoHighlighted[j - 2])
+                order++
+
+            }
+
+            if (blockTwoHighlighted[j].note === dictionary[order.toString()]) {
+
+
+                // if current search note is in not preffered area, check if the same note exists in preferred area ahead, but before the next search note
+
+                if (!prefferedPositions.includes(blockTwoHighlighted[j].pos)) {
+                    console.log("trying to find in the preffered ahead", blockTwoHighlighted[j].note, "NEXT:", dictionary[(order + 1).toString()])
+
+
+
+                    for (let k = j + 1; k < j + 3; k++) {
+                        let searchNote = dictionary[order.toString()]
+                        if (blockTwoHighlighted[k]) {
+                            if (blockTwoHighlighted[k] && blockTwoHighlighted[k].note === searchNote) {
+                                console.log("PUSHING NEXT MATCHING INSIDE PREFFERED:", blockTwoHighlighted[k])
+                                noteSequence.push(blockTwoHighlighted[k])
+                                order++
+                                k = j + 3
+
+
+                            }
+                        }
+                        k++
+                    }
+
+
+                }
+            }
+
+            if (blockTwoHighlighted[j].note === dictionary[order.toString()]) {
+                // if current j is the last highlighted and it is outside the prefferred - check if the first in the next block's first matches the note is currently being searched
+                if (j === blockTwoHighlighted.length - 1 && !prefferedPositions.includes(blockTwoHighlighted[j].pos) && prefferedPositions.includes(blockThreeHighlighted[0].pos)) {
+                    noteSequence.push(blockThreeHighlighted[0])
+                    order++
+                    // if next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                } else if (blockTwoHighlighted[j + 1] && blockTwoHighlighted[j + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockTwoHighlighted[j + 1].pos)) {
+                    noteSequence.push(blockTwoHighlighted[j + 1])
+                    order++
+                } else {
+                    noteSequence.push(blockTwoHighlighted[j])
+                    order++
+                }
+            }
+            // if the last highlighted block cell does not mtch the note currently beign searched for, should check the next block
+            if (j === blockTwoHighlighted.length - 1 && blockTwoHighlighted[j] !== dictionary[order.toString()]) {
+                // repeat lojic inside the j loop:
+                for (let k = 0; k < blockThreeHighlighted.length; k++) {
+                    // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                    if (blockThreeHighlighted[k].note === dictionary[order.toString()]) {
+                        // if (next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                        if (blockThreeHighlighted[k + 1] && blockThreeHighlighted[k + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockThreeHighlighted[k + 1].pos)) {
+                            noteSequence.push(blockThreeHighlighted[k + 1])
+                            order++
+                        } else {
+                            noteSequence.push(blockThreeHighlighted[k])
+                            order++
+                        }
+                    }
+                }
+            }
+        }
+        // for the block 3
+        order = 1
+        for (let j = 0; j < blockThreeHighlighted.length; j++) {
+            // if we are looking for 'G#Ab' after 'G' look backwards 
+            if (blockThreeHighlighted[j - 2] && dictionary[order.toString()] === blockThreeHighlighted[j - 2].note && blockOneHighlighted[j].note !== dictionary[order.toString()]) {
+                noteSequence.push(blockThreeHighlighted[j - 2])
+                order++
+
+            }
+
+
+            // if current search note is in not preffered area, check if the same note exists in preferred area ahead, but before the next search note
+
+            if (!prefferedPositions.includes(blockTwoHighlighted[j].pos)) {
+                console.log("trying to find in the preffered ahead", blockTwoHighlighted[j].note, "NEXT:", dictionary[(order + 1).toString()])
+
+
+
+                for (let k = j + 1; k < j + 3; k++) {
+                    let searchNote = dictionary[order.toString()]
+                    if (blockTwoHighlighted[k]) {
+                        if (blockTwoHighlighted[k] && blockTwoHighlighted[k].note === searchNote) {
+                            console.log("PUSHING NEXT MATCHING INSIDE PREFFERED:", blockTwoHighlighted[k])
+                            noteSequence.push(blockTwoHighlighted[k])
+                            k = j + 3
+                            order++
+
+
+                        }
+                    } else {
+                        k++
+                    }
+                    
+                }
+
+
+            }
+
+            if (blockThreeHighlighted[j].note === dictionary[order.toString()]) {
+
+                // if next in highlighted is inside preffered and current highlighted is outside, skip current and push the next):
+                if (blockThreeHighlighted[j + 1] && blockThreeHighlighted[j + 1].note === dictionary[order.toString()] && prefferedPositions.includes(blockThreeHighlighted[j + 1].pos)) {
+                    noteSequence.push(blockThreeHighlighted[j + 1])
+                    order++
+                } else {
+                    noteSequence.push(blockThreeHighlighted[j])
+                    order++
+                }
+            }
+        }
         return noteSequence
 
     }
@@ -163,7 +323,7 @@ export default function HarmonicaChart() {
                         value={playKey}
 
                     >
-                        
+
                         {
                             harmonicaService.baseNotes.map((k, idx) => {
                                 return <option key={idx}>{k}</option>
@@ -199,7 +359,7 @@ export default function HarmonicaChart() {
                                     }
                                     {
                                         resultSequence.find((el, index) => {
-                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 1
                                         })
 
                                         && <span
@@ -235,7 +395,7 @@ export default function HarmonicaChart() {
                                 >
                                     {
                                         resultSequence.find((el, index) => {
-                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 2
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== resultSequence.length / 3 && el.block === 2
                                         })
 
                                         && <span
@@ -245,7 +405,8 @@ export default function HarmonicaChart() {
                                     }
                                     {
                                         resultSequence.find((el, index) => {
-                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 2
+
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === resultSequence.length / 3 && el.block === 2
                                         })
 
                                         && <span
@@ -253,6 +414,7 @@ export default function HarmonicaChart() {
                                             🔸
                                         </span>
                                     }
+
                                     {notes[i - 1]}
                                 </div>
                                 }
@@ -280,7 +442,8 @@ export default function HarmonicaChart() {
                                 >
                                     {
                                         resultSequence.find((el, index) => {
-                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 3
+
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index !== resultSequence.length / 3 * 2 && el.block === 3
                                         })
 
                                         && <span
@@ -290,7 +453,7 @@ export default function HarmonicaChart() {
                                     }
                                     {
                                         resultSequence.find((el, index) => {
-                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 3
+                                            return el.note === notes[i - 1] && el.pos === idx + 1 && index === resultSequence.length / 3 * 2 && el.block === 3
                                         })
 
                                         && <span
@@ -298,6 +461,7 @@ export default function HarmonicaChart() {
                                             🔸
                                         </span>
                                     }
+
                                     {notes[i - 1]}
                                 </div>
                                 }
