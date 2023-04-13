@@ -52,6 +52,8 @@ function notesFinder(playKey, scale) {
 }
 
 
+
+
 module.exports = {
     baseNotes,
     reorderBaseNotesByKey,
