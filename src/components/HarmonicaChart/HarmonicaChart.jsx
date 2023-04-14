@@ -1,7 +1,6 @@
 import './HarmonicaChart.css'
 import { useState } from "react";
 import * as harmonicaService from '../../utilities/harmonica-service'
-import React, { useRef } from "react";
 import Xarrow from "react-xarrows";
 
 
@@ -69,15 +68,17 @@ export default function HarmonicaChart() {
                 if (!prefferedPositions.includes(highlighted[i].pos) && harmonicaService.checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
 
                     noteSequence.push(harmonicaService.checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1]))
-                    console.log("push from preffered..")
+                  
                     order++
                 } else {
                     noteSequence.push(highlighted[i])
+                  
                     order++
                 }
             }
             if (harmonicaService.chekBackwards(i, highlighted, notesInPlay[order])) {
                 noteSequence.push(harmonicaService.chekBackwards(i, highlighted, notesInPlay[order]))
+         
                 i = i - 1
                 order++
             }
@@ -85,30 +86,37 @@ export default function HarmonicaChart() {
         }
 
 
-
+        console.log("Note sequence", noteSequence)
         // repeat sequence blocksQty times:
         let extendedSequence = [...noteSequence]
-        console.log(extendedSequence)
+       
         for (let i = 1; i < blocksQty; i++) {
             noteSequence.forEach(note => {
-                let newNoteEl = { 'note': note.note, 'block': i + 1, 'pos': note.pos }
+                let newBlock = note.block + i
+                let newNoteEl = { 'note': note.note, 'block': newBlock, 'pos': note.pos }
+                console.log("Pushing into extended sequence",newNoteEl)
                 extendedSequence.push(newNoteEl)
             })
         }
+        console.log("Full sequence",extendedSequence)
         return extendedSequence
     }
 
 
     let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, blockQty)
 
-    console.log("Note Sequence:", resultSequence)
     console.log("Layout pattern:", harmonicaService.layoutPattern.length)
+    
+    let sortedResultSequence = resultSequence.sort((a,b) => a.block - b.block || a.pos - b.pos)
+    console.log("Note Sequence:", resultSequence)
+    console.log("Note SORTED Sequence:", sortedResultSequence)
 
     let notesLayout = []
     for (let block = 1; block <= blockQty; block++) {
         harmonicaService.layoutPattern.forEach((i, idx) => {
-            let newNoteObj = {'note': notes[i - 1], 'block': block, 'pos': idx + 1}
+            let newNoteObj = { 'note': notes[i - 1], 'block': block, 'pos': idx + 1 }
             let sequenceIdx = resultSequence.findIndex(el => {
+       
                 return el.note === newNoteObj.note && el.block === newNoteObj.block && el.pos === newNoteObj.pos
             })
             if (sequenceIdx > - 1) {
@@ -117,12 +125,8 @@ export default function HarmonicaChart() {
 
             notesLayout.push(newNoteObj)
         })
-        console.log(notesLayout.slice(0, 16))
+        console.log("This is notes layout:",notesLayout)
     }
-
-
-
-
 
 
 
@@ -131,6 +135,7 @@ export default function HarmonicaChart() {
         <>
             <p>THIS IS YOUR HARMONICA NOTES LAYOUT</p>
             <section id="settings">
+
                 <div className="setting">
                     <label>Harmonica key:</label>
                     <select name="harmonica-key"
@@ -184,13 +189,14 @@ export default function HarmonicaChart() {
                 <div id='chart'>
 
                     {
-                        notesLayout.slice(0,16).map((i, idx) => {
+                        notesLayout.slice(0, 16).map((i, idx) => {
 
 
                             return <>
                                 {playNotes.includes(i.note) && <div
                                     className="highlighted"
                                     key={idx}
+                                    id="cell"
 
                                 >
                                     {
@@ -201,8 +207,17 @@ export default function HarmonicaChart() {
                                         && <span
                                             className='note'
                                             id={i.id}>
+                                                {notesLayout.find((e)=>{ return e.id === i.id + 1}) && <Xarrow
+                                                start={i.id.toString()}
+                                                end={(i.id + 1).toString()}
+                                                showHead={false}
+                                                strokeWidth={2}
+                                                tailSize={2}
+                                            />
+                                            }
                                             🔹
                                         </span>
+
                                     }
                                     {
                                         resultSequence.find((el, index) => {
@@ -212,6 +227,15 @@ export default function HarmonicaChart() {
                                         && <span
                                             className='note'
                                             id={i.id}>
+                                                {notesLayout.find((e) => { return e.id === i.id + 1 }) && <Xarrow
+                                                    start={i.id.toString()}
+                                                    end={(i.id + 1).toString()}
+                                                    showHead={false}
+                                                    strokeWidth={2}
+                                                    tailSize={2}
+                                                />
+                                                
+                                                }
                                             🔸
                                         </span>
                                     }
@@ -221,7 +245,9 @@ export default function HarmonicaChart() {
                                 }
 
                                 {!playNotes.includes(i.note) && <div
-                                    key={idx}>
+                                    key={idx}
+                                    id="cell"
+                                >
                                     {i.note}
                                 </div>
                                 }
@@ -239,6 +265,7 @@ export default function HarmonicaChart() {
                                 {playNotes.includes(i.note) && <div
                                     className="highlighted"
                                     key={idx}
+                                    id="cell"
 
                                 >
                                     {
@@ -249,6 +276,14 @@ export default function HarmonicaChart() {
                                         && <span
                                             className='note'
                                             id={i.id}>
+                                                {notesLayout.find((e) => { return e.id === i.id + 1 }) &&<Xarrow
+                                                start={(i.id).toString()}
+                                                end={(i.id + 1).toString()}
+                                                showHead={false}
+                                                strokeWidth={2}
+                                                tailSize={2}
+                                            />
+                                                }
                                             🔹
                                         </span>
                                     }
@@ -262,6 +297,14 @@ export default function HarmonicaChart() {
                                             className='note'
                                             id={i.id}
                                         >
+                                                {notesLayout.find((e) => { return e.id === i.id + 1 }) && <Xarrow
+                                                    start={i.id.toString()}
+                                                    end={(i.id + 1).toString()}
+                                                    showHead={false}
+                                                    strokeWidth={2}
+                                                    tailSize={2}
+                                                />
+                                                }
                                             🔸
                                         </span>
                                     }
@@ -271,7 +314,9 @@ export default function HarmonicaChart() {
                                 }
 
                                 {!playNotes.includes(i.note) && <div
-                                    key={idx}>
+                                    key={idx}
+                                    id="cell"
+                                >
                                     {i.note}
                                 </div>
                                 }
@@ -289,6 +334,7 @@ export default function HarmonicaChart() {
                                 {playNotes.includes(i.note) && <div
                                     className="highlighted"
                                     key={idx}
+                                    id="cell"
 
                                 >
                                     {
@@ -299,9 +345,18 @@ export default function HarmonicaChart() {
 
                                         && <span
                                             className='note'
-                                                id={i.id}
+                                            id={i.id}
                                         >
                                             🔹
+                                                {notesLayout.find((e) => { return e.id === i.id + 1 }) &&<Xarrow
+                                                start={i.id.toString()}
+                                                end={(i.id + 1).toString()}
+                                                showHead={false}
+                                                strokeWidth={2}
+                                                tailSize={2}
+                                                
+                                            />
+                                                }
                                         </span>
                                     }
                                     {
@@ -311,8 +366,17 @@ export default function HarmonicaChart() {
 
                                         && <span
                                             className='note'
-                                                id={i.id}
+                                            id={i.id}
                                         >
+                                                {notesLayout.find((e) => { return e.id === i.id + 1 }) && <Xarrow
+                                                    start={i.id.toString()}
+                                                    end={(i.id + 1).toString()}
+                                                    showHead={false}
+                                                    strokeWidth={2}
+                                                    tailSize={2}
+                                    
+                                                />
+                                                }
                                             🔸
                                         </span>
                                     }
@@ -322,7 +386,9 @@ export default function HarmonicaChart() {
                                 }
 
                                 {!playNotes.includes(i.note) && <div
-                                    key={idx}>
+                                    key={idx}
+                                    id="cell"
+                                >
                                     {i.note}
                                 </div>
                                 }

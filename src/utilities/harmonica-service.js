@@ -42,7 +42,7 @@ function notesFinder(playKey, scale) {
     let currentNote = playKey
     console.log("We are going to play in key of:",currentNote)
     for (let i = 0; i < scales[scale].length - 1; i++) {
-        let noteStep = noteSteps.find((n) => { return n.note === currentNote })
+        let noteStep = noteSteps.find((n) =>   n.note === currentNote )
         playNotes.push(noteStep[scales[scale][i]])
         currentNote = noteStep[scales[scale][i]]
     }

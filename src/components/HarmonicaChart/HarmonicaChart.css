@@ -19,7 +19,7 @@
     /* transform: rotate(90deg); */
 }
 
-#chart div {
+#cell {
     margin: 0;
     border: solid rgb(255, 255, 255) 3px;
     width: 80px;
@@ -65,4 +65,17 @@
     background-color: yellow;
     margin-left: 1rem;
     
+}
+
+svg {
+    width: 5;
+    height: 3;
+}
+
+path {
+
+}
+
+g {
+
 }
