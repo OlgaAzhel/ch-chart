@@ -50,6 +50,25 @@ function notesFinder(playKey, scale) {
 }
 
 
+function chekBackwards(index, highlightedArr, note) {
+    // console.log("check backwards run...")
+    if (highlightedArr[index - 2] && highlightedArr[index - 2].note === note) {
+        return highlightedArr[index - 2]
+    }
+    return null
+}
+function checkAheadPreferred(index, highlightedArr, note, nextNote) {
+    let prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
+    let pushingToSequence
+    for (let i = index + 1; i < index + 3; i++) {
+        if (highlightedArr[i] && prefferedPositions.includes(highlightedArr[i].pos) && highlightedArr[i].note === note) {
+            pushingToSequence = highlightedArr[i]
+        }
+    }
+    
+    console.log("Check ahead returns..", pushingToSequence)
+    return pushingToSequence
+}
 
 
 module.exports = {
@@ -58,5 +77,7 @@ module.exports = {
     layoutPattern,
     scales, 
     notesFinder,
-    noteSteps
+    noteSteps, 
+    chekBackwards,
+    checkAheadPreferred
 }
