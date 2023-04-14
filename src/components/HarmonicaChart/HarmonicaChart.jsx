@@ -1,7 +1,8 @@
 import './HarmonicaChart.css'
 import { useState } from "react";
 import * as harmonicaService from '../../utilities/harmonica-service'
-
+import React, { useRef } from "react";
+import Xarrow from "react-xarrows";
 
 
 
@@ -27,7 +28,7 @@ export default function HarmonicaChart() {
         setPlayKey(newPlayKey)
         setPlayNotes(harmonicaService.notesFinder(newPlayKey, scale))
     }
-
+    const blockQty = 3
 
     console.log("THESE ARE PLAY NOTES", playNotes)
 
@@ -98,211 +99,241 @@ export default function HarmonicaChart() {
     }
 
 
+    let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, blockQty)
+
+    console.log("Note Sequence:", resultSequence)
+    console.log("Layout pattern:", harmonicaService.layoutPattern.length)
+
+    let notesLayout = []
+    for (let block = 1; block <= blockQty; block++) {
+        harmonicaService.layoutPattern.forEach((i, idx) => {
+            let newNoteObj = {'note': notes[i - 1], 'block': block, 'pos': idx + 1}
+            let sequenceIdx = resultSequence.findIndex(el => {
+                return el.note === newNoteObj.note && el.block === newNoteObj.block && el.pos === newNoteObj.pos
+            })
+            if (sequenceIdx > - 1) {
+                newNoteObj.id = sequenceIdx
+            }
+
+            notesLayout.push(newNoteObj)
+        })
+        console.log(notesLayout.slice(0, 16))
+    }
 
 
-let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, 3)
-console.log("Note Sequence:", resultSequence)
 
 
 
 
 
 
-return (
-    <>
-        <p>THIS IS YOUR HARMONICA NOTES LAYOUT</p>
-        <section id="settings">
-            <div className="setting">
-                <label>Harmonica key:</label>
-                <select name="harmonica-key"
-                    onChange={harmonicaKeyChange}
-                    value={harmonicaKey}
+    return (
+        <>
+            <p>THIS IS YOUR HARMONICA NOTES LAYOUT</p>
+            <section id="settings">
+                <div className="setting">
+                    <label>Harmonica key:</label>
+                    <select name="harmonica-key"
+                        onChange={harmonicaKeyChange}
+                        value={harmonicaKey}
 
-                >
+                    >
+                        {
+                            harmonicaService.baseNotes.map((note, idx) => {
+                                return <option key={idx}>{note}</option>
+                            })
+                        }
+                    </select>
+                </div>
+                <div className="setting">
+                    <label>Scale:</label>
+                    <select name="play-scale"
+                        onChange={playScaleChange}
+                        value={scale}
+
+                    >
+                        {
+                            Object.keys(harmonicaService.scales).map((s, idx) => {
+                                return <option key={idx}>{s}</option>
+                            })
+                        }
+                    </select>
+                </div>
+                <div className="setting">
+                    <label>Play Key:</label>
+                    <select name="play-key"
+                        onChange={playKeyChange}
+                        value={playKey}
+
+                    >
+
+                        {
+                            harmonicaService.baseNotes.map((k, idx) => {
+                                return <option key={idx}>{k}</option>
+                            })
+                        }
+                    </select>
+                </div>
+            </section>
+
+            <h4>{playNotes.map(n => <span className="note-span">{n}</span>)}</h4>
+
+
+            <section id="layout">
+
+                <div id='chart'>
+
                     {
-                        harmonicaService.baseNotes.map((note, idx) => {
-                            return <option key={idx}>{note}</option>
+                        notesLayout.slice(0,16).map((i, idx) => {
+
+
+                            return <>
+                                {playNotes.includes(i.note) && <div
+                                    className="highlighted"
+                                    key={idx}
+
+                                >
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === i.note && el.pos === idx + 1 && index !== 0 && el.block === 1
+                                        })
+
+                                        && <span
+                                            className='note'
+                                            id={i.id}>
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === i.note && el.pos === idx + 1 && index === 0 && el.block === 1
+                                        })
+
+                                        && <span
+                                            className='note'
+                                            id={i.id}>
+                                            🔸
+                                        </span>
+                                    }
+
+                                    {i.note}
+                                </div>
+                                }
+
+                                {!playNotes.includes(i.note) && <div
+                                    key={idx}>
+                                    {i.note}
+                                </div>
+                                }
+                            </>
                         })
                     }
-                </select>
-            </div>
-            <div className="setting">
-                <label>Scale:</label>
-                <select name="play-scale"
-                    onChange={playScaleChange}
-                    value={scale}
 
-                >
-                    {
-                        Object.keys(harmonicaService.scales).map((s, idx) => {
-                            return <option key={idx}>{s}</option>
-                        })
-                    }
-                </select>
-            </div>
-            <div className="setting">
-                <label>Play Key:</label>
-                <select name="play-key"
-                    onChange={playKeyChange}
-                    value={playKey}
-
-                >
+                </div>
+                <div id='chart'>
 
                     {
-                        harmonicaService.baseNotes.map((k, idx) => {
-                            return <option key={idx}>{k}</option>
+                        notesLayout.slice(16, 32).map((i, idx) => {
+
+                            return <>
+                                {playNotes.includes(i.note) && <div
+                                    className="highlighted"
+                                    key={idx}
+
+                                >
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === i.note && el.pos === idx + 1 && index !== resultSequence.length / 3 && el.block === 2
+                                        })
+
+                                        && <span
+                                            className='note'
+                                            id={i.id}>
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+
+                                            return el.note === i.note && el.pos === idx + 1 && index === resultSequence.length / 3 && el.block === 2
+                                        })
+
+                                        && <span
+                                            className='note'
+                                            id={i.id}
+                                        >
+                                            🔸
+                                        </span>
+                                    }
+
+                                    {i.note}
+                                </div>
+                                }
+
+                                {!playNotes.includes(i.note) && <div
+                                    key={idx}>
+                                    {i.note}
+                                </div>
+                                }
+                            </>
                         })
                     }
-                </select>
-            </div>
-        </section>
-        <h4>{playNotes.map(n => <span className="note-span">{n}</span>)}</h4>
-        <section id="layout">
 
-            <div id='chart'>
+                </div>
+                <div id='chart'>
 
-                {
-                    harmonicaService.layoutPattern.map((i, idx) => {
+                    {
+                        notesLayout.slice(32).map((i, idx) => {
 
+                            return <>
+                                {playNotes.includes(i.note) && <div
+                                    className="highlighted"
+                                    key={idx}
 
-                        return <>
-                            {playNotes.includes(notes[i - 1]) && <div
-                                className="highlighted"
-                                key={idx}
-                                id={`1${idx + 1}`}
-                            >
-                                {
-                                    resultSequence.find((el, index) => {
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index !== 0 && el.block === 1
-                                    })
+                                >
+                                    {
+                                        resultSequence.find((el, index) => {
 
-                                    && <span
-                                        className='note'>
-                                        🔹
-                                    </span>
-                                }
-                                {
-                                    resultSequence.find((el, index) => {
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index === 0 && el.block === 1
-                                    })
+                                            return el.note === i.note && el.pos === idx + 1 && index !== resultSequence.length / 3 * 2 && el.block === 3
+                                        })
 
-                                    && <span
-                                        className='note'>
-                                        🔸
-                                    </span>
-                                }
+                                        && <span
+                                            className='note'
+                                                id={i.id}
+                                        >
+                                            🔹
+                                        </span>
+                                    }
+                                    {
+                                        resultSequence.find((el, index) => {
+                                            return el.note === i.note && el.pos === idx + 1 && index === resultSequence.length / 3 * 2 && el.block === 3
+                                        })
 
-                                {notes[i - 1]}
-                            </div>
-                            }
+                                        && <span
+                                            className='note'
+                                                id={i.id}
+                                        >
+                                            🔸
+                                        </span>
+                                    }
 
-                            {!playNotes.includes(notes[i - 1]) && <div
-                                key={idx}>
-                                {notes[i - 1]}
-                            </div>
-                            }
-                        </>
-                    })
-                }
-
-            </div>
-            <div id='chart'>
-
-                {
-                    harmonicaService.layoutPattern.map((i, idx) => {
-
-                        return <>
-                            {playNotes.includes(notes[i - 1]) && <div
-                                className="highlighted"
-                                key={idx}
-                                id={`2${idx + 1}`}
-                            >
-                                {
-                                    resultSequence.find((el, index) => {
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index !== resultSequence.length / 3 && el.block === 2
-                                    })
-
-                                    && <span
-                                        className='note'>
-                                        🔹
-                                    </span>
-                                }
-                                {
-                                    resultSequence.find((el, index) => {
-
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index === resultSequence.length / 3 && el.block === 2
-                                    })
-
-                                    && <span
-                                        className='note'>
-                                        🔸
-                                    </span>
+                                    {i.note}
+                                </div>
                                 }
 
-                                {notes[i - 1]}
-                            </div>
-                            }
-
-                            {!playNotes.includes(notes[i - 1]) && <div
-                                key={idx}>
-                                {notes[i - 1]}
-                            </div>
-                            }
-                        </>
-                    })
-                }
-
-            </div>
-            <div id='chart'>
-
-                {
-                    harmonicaService.layoutPattern.map((i, idx) => {
-
-                        return <>
-                            {playNotes.includes(notes[i - 1]) && <div
-                                className="highlighted"
-                                key={idx}
-                                id={`3${idx + 1}`}
-                            >
-                                {
-                                    resultSequence.find((el, index) => {
-
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index !== resultSequence.length / 3 * 2 && el.block === 3
-                                    })
-
-                                    && <span
-                                        className='note'>
-                                        🔹
-                                    </span>
+                                {!playNotes.includes(i.note) && <div
+                                    key={idx}>
+                                    {i.note}
+                                </div>
                                 }
-                                {
-                                    resultSequence.find((el, index) => {
-                                        return el.note === notes[i - 1] && el.pos === idx + 1 && index === resultSequence.length / 3 * 2 && el.block === 3
-                                    })
-
-                                    && <span
-                                        className='note'>
-                                        🔸
-                                    </span>
-                                }
-
-                                {notes[i - 1]}
-                            </div>
-                            }
-
-                            {!playNotes.includes(notes[i - 1]) && <div
-                                key={idx}>
-                                {notes[i - 1]}
-                            </div>
-                            }
-                        </>
-                    })
-                }
+                            </>
+                        })
+                    }
 
 
-            </div>
-        </section>
-    </>
-)
+                </div>
+            </section>
+        </>
+    )
 }
 
