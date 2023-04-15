@@ -1,7 +1,9 @@
 import './HarmonicaChart.css'
 import { useState } from "react";
-import * as harmonicaService from '../../utilities/harmonica-service'
+import { baseNotes, checkAheadPreferred, chekBackwards, layoutPattern, notesFinder, reorderBaseNotesByKey, scales } from '../../utilities/harmonica-service'
 import Xarrow from "react-xarrows";
+import Selection from './Selection';
+import CurrentKeyNotes from './CurrentKeyNotes';
 
 
 
@@ -9,8 +11,8 @@ export default function HarmonicaChart() {
     const [scale, setScale] = useState('Major Scale')
     const [playKey, setPlayKey] = useState('C')
     const [harmonicaKey, setHarmonicaKey] = useState('C')
-    const [playNotes, setPlayNotes] = useState(harmonicaService.notesFinder(playKey, scale))
-    const notes = harmonicaService.reorderBaseNotesByKey(harmonicaKey)
+    const [playNotes, setPlayNotes] = useState(notesFinder(playKey, scale))
+    const notes = reorderBaseNotesByKey(harmonicaKey)
 
 
     function harmonicaKeyChange(evt) {
@@ -20,19 +22,19 @@ export default function HarmonicaChart() {
     function playScaleChange(evt) {
         const newScale = evt.target.value
         setScale(newScale)
-        setPlayNotes(harmonicaService.notesFinder(playKey, newScale))
+        setPlayNotes(notesFinder(playKey, newScale))
     }
     function playKeyChange(evt) {
         const newPlayKey = evt.target.value
         setPlayKey(newPlayKey)
-        setPlayNotes(harmonicaService.notesFinder(newPlayKey, scale))
+        setPlayNotes(notesFinder(newPlayKey, scale))
     }
     const blockQty = 3
 
     console.log("THESE ARE PLAY NOTES", playNotes)
 
 
-    let currentHarmonicaPattern = harmonicaService.layoutPattern.concat(harmonicaService.layoutPattern).concat(harmonicaService.layoutPattern)
+    let currentHarmonicaPattern = layoutPattern.concat(layoutPattern).concat(layoutPattern)
     let fullPattern = currentHarmonicaPattern.map((el, idx) => {
         return notes[el - 1]
     })
@@ -65,9 +67,9 @@ export default function HarmonicaChart() {
             console.log("looking for note:", notesInPlay[order], "at ", highlighted[i].note)
             if (highlighted[i].note === notesInPlay[order]) {
 
-                if (!prefferedPositions.includes(highlighted[i].pos) && harmonicaService.checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
+                if (!prefferedPositions.includes(highlighted[i].pos) && checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
 
-                    noteSequence.push(harmonicaService.checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1]))
+                    noteSequence.push(checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1]))
                   
                     order++
                 } else {
@@ -76,8 +78,8 @@ export default function HarmonicaChart() {
                     order++
                 }
             }
-            if (harmonicaService.chekBackwards(i, highlighted, notesInPlay[order])) {
-                noteSequence.push(harmonicaService.chekBackwards(i, highlighted, notesInPlay[order]))
+            if (chekBackwards(i, highlighted, notesInPlay[order])) {
+                noteSequence.push(chekBackwards(i, highlighted, notesInPlay[order]))
          
                 i = i - 1
                 order++
@@ -105,7 +107,7 @@ export default function HarmonicaChart() {
 
     let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, blockQty)
 
-    console.log("Layout pattern:", harmonicaService.layoutPattern.length)
+    console.log("Layout pattern:", layoutPattern.length)
     
     let sortedResultSequence = resultSequence.sort((a,b) => a.block - b.block || a.pos - b.pos)
     console.log("Note Sequence:", resultSequence)
@@ -113,7 +115,7 @@ export default function HarmonicaChart() {
 
     let notesLayout = []
     for (let block = 1; block <= blockQty; block++) {
-        harmonicaService.layoutPattern.forEach((i, idx) => {
+        layoutPattern.forEach((i, idx) => {
             let newNoteObj = { 'note': notes[i - 1], 'block': block, 'pos': idx + 1 }
             let sequenceIdx = resultSequence.findIndex(el => {
        
@@ -135,54 +137,30 @@ export default function HarmonicaChart() {
         <>
             <p>THIS IS YOUR HARMONICA NOTES LAYOUT</p>
             <section id="settings">
+                <Selection
+                    label='Harmonica key'
+                    value={harmonicaKey}
+                    onSelect={harmonicaKeyChange}
+                    options={baseNotes}
+                />
 
-                <div className="setting">
-                    <label>Harmonica key:</label>
-                    <select name="harmonica-key"
-                        onChange={harmonicaKeyChange}
-                        value={harmonicaKey}
+                <Selection 
+                    label='Scale' 
+                    value={scale}
+                    onSelect={playScaleChange}
+                    options={Object.keys(scales)}
+                    />
 
-                    >
-                        {
-                            harmonicaService.baseNotes.map((note, idx) => {
-                                return <option key={idx}>{note}</option>
-                            })
-                        }
-                    </select>
-                </div>
-                <div className="setting">
-                    <label>Scale:</label>
-                    <select name="play-scale"
-                        onChange={playScaleChange}
-                        value={scale}
-
-                    >
-                        {
-                            Object.keys(harmonicaService.scales).map((s, idx) => {
-                                return <option key={idx}>{s}</option>
-                            })
-                        }
-                    </select>
-                </div>
-                <div className="setting">
-                    <label>Play Key:</label>
-                    <select name="play-key"
-                        onChange={playKeyChange}
-                        value={playKey}
-
-                    >
-
-                        {
-                            harmonicaService.baseNotes.map((k, idx) => {
-                                return <option key={idx}>{k}</option>
-                            })
-                        }
-                    </select>
-                </div>
+                <Selection
+                    label='Play Key'
+                    value={playKey}
+                    onSelect={playKeyChange}
+                    options={baseNotes}
+                />
+                
             </section>
 
-            <h4>{playNotes.map(n => <span className="note-span">{n}</span>)}</h4>
-
+            <CurrentKeyNotes playNotes={playNotes} />
 
             <section id="layout">
 
