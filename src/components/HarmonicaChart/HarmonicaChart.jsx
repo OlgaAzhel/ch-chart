@@ -1,9 +1,10 @@
 import './HarmonicaChart.css'
 import { useState } from "react";
-import { baseNotes, checkAheadPreferred, chekBackwards, layoutPattern, notesFinder, reorderBaseNotesByKey, scales } from '../../utilities/harmonica-service'
+import { baseNotes, checkAheadPreferred, chekBackwards, layoutPattern, notesFinder, reorderBaseNotesByKey, resultSequenceFinder, scales } from '../../utilities/harmonica-service'
 import Xarrow from "react-xarrows";
 import Selection from './Selection';
 import CurrentKeyNotes from './CurrentKeyNotes';
+import { Layout } from './Layout';
 
 
 
@@ -54,64 +55,17 @@ export default function HarmonicaChart() {
         return playNotes.includes(note.note)
     })
 
-    console.log("ALL HIGHLIGHTED:", currentHighlighted)
-    console.log("ALL NOTES SEQUENCE WE PLAY IN KEY OF:", playNotes[0], playNotes)
-
-    let prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
-
-
-    function resultSequenceFinder(notesInPlay, highlighted, noteSequence = [], order = 0, blocksQty) {
-
-
-        for (let i = 0; i < highlighted.length; i++) {
-            console.log("looking for note:", notesInPlay[order], "at ", highlighted[i].note)
-            if (highlighted[i].note === notesInPlay[order]) {
-
-                if (!prefferedPositions.includes(highlighted[i].pos) && checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
-
-                    noteSequence.push(checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1]))
-                  
-                    order++
-                } else {
-                    noteSequence.push(highlighted[i])
-                  
-                    order++
-                }
-            }
-            if (chekBackwards(i, highlighted, notesInPlay[order])) {
-                noteSequence.push(chekBackwards(i, highlighted, notesInPlay[order]))
-         
-                i = i - 1
-                order++
-            }
-
-        }
-
-
-        console.log("Note sequence", noteSequence)
-        // repeat sequence blocksQty times:
-        let extendedSequence = [...noteSequence]
-       
-        for (let i = 1; i < blocksQty; i++) {
-            noteSequence.forEach(note => {
-                let newBlock = note.block + i
-                let newNoteEl = { 'note': note.note, 'block': newBlock, 'pos': note.pos }
-                console.log("Pushing into extended sequence",newNoteEl)
-                extendedSequence.push(newNoteEl)
-            })
-        }
-        console.log("Full sequence",extendedSequence)
-        return extendedSequence
-    }
+    // console.log("ALL HIGHLIGHTED:", currentHighlighted)
+    // console.log("ALL NOTES SEQUENCE WE PLAY IN KEY OF:", playNotes[0], playNotes)
 
 
     let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, blockQty)
 
-    console.log("Layout pattern:", layoutPattern.length)
+    // console.log("Layout pattern:", layoutPattern.length)
     
     let sortedResultSequence = resultSequence.sort((a,b) => a.block - b.block || a.pos - b.pos)
-    console.log("Note Sequence:", resultSequence)
-    console.log("Note SORTED Sequence:", sortedResultSequence)
+    // console.log("Note Sequence:", resultSequence)
+    // console.log("Note SORTED Sequence:", sortedResultSequence)
 
     let notesLayout = []
     for (let block = 1; block <= blockQty; block++) {
@@ -127,7 +81,7 @@ export default function HarmonicaChart() {
 
             notesLayout.push(newNoteObj)
         })
-        console.log("This is notes layout:",notesLayout)
+        // console.log("This is notes layout:",notesLayout)
     }
 
 
@@ -162,19 +116,18 @@ export default function HarmonicaChart() {
 
             <CurrentKeyNotes playNotes={playNotes} />
 
-            <section id="layout">
+            <section className="layout">
 
-                <div id='chart'>
+                <div className='chart'>
 
                     {
                         notesLayout.slice(0, 16).map((i, idx) => {
 
 
-                            return <>
+                            return <div key={'lay'+ idx}>
                                 {playNotes.includes(i.note) && <div
-                                    className="highlighted"
+                                    className="cell highlighted"
                                     key={idx}
-                                    id="cell"
 
                                 >
                                     {
@@ -184,6 +137,7 @@ export default function HarmonicaChart() {
 
                                         && <span
                                             className='note'
+                                            key={'span' + idx}
                                             id={i.id}>
                                                 {notesLayout.find((e)=>{ return e.id === i.id + 1}) && <Xarrow
                                                 start={i.id.toString()}
@@ -224,27 +178,25 @@ export default function HarmonicaChart() {
 
                                 {!playNotes.includes(i.note) && <div
                                     key={idx}
-                                    id="cell"
+                                    className="cell"
                                 >
                                     {i.note}
                                 </div>
                                 }
-                            </>
+                            </div>
                         })
                     }
 
                 </div>
-                <div id='chart'>
+                <div className='chart'>
 
                     {
                         notesLayout.slice(16, 32).map((i, idx) => {
 
                             return <>
                                 {playNotes.includes(i.note) && <div
-                                    className="highlighted"
+                                    className="highlighted cell"
                                     key={idx}
-                                    id="cell"
-
                                 >
                                     {
                                         resultSequence.find((el, index) => {
@@ -293,7 +245,7 @@ export default function HarmonicaChart() {
 
                                 {!playNotes.includes(i.note) && <div
                                     key={idx}
-                                    id="cell"
+                                    className="cell"
                                 >
                                     {i.note}
                                 </div>
@@ -303,17 +255,15 @@ export default function HarmonicaChart() {
                     }
 
                 </div>
-                <div id='chart'>
+                <div className='chart'>
 
                     {
                         notesLayout.slice(32).map((i, idx) => {
 
                             return <>
                                 {playNotes.includes(i.note) && <div
-                                    className="highlighted"
+                                    className="cell highlighted"
                                     key={idx}
-                                    id="cell"
-
                                 >
                                     {
                                         resultSequence.find((el, index) => {
@@ -365,7 +315,7 @@ export default function HarmonicaChart() {
 
                                 {!playNotes.includes(i.note) && <div
                                     key={idx}
-                                    id="cell"
+                                    className="cell"
                                 >
                                     {i.note}
                                 </div>
@@ -377,6 +327,22 @@ export default function HarmonicaChart() {
 
                 </div>
             </section>
+
+
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+
+            
+            <Layout 
+                harmonicaKey={harmonicaKey} 
+                playKey={playKey} 
+                scaleMode={scale}
+                playNotes={playNotes}
+            />
         </>
     )
 }

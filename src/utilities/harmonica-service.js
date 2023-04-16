@@ -1,25 +1,25 @@
 
-const baseNotes = [
+export const baseNotes = [
     'C', 'C#/D♭', 'D', 'D#/E♭', 'E', 'F', 'F#/G♭', 'G', 'G#A♭', 'A', 'A#B♭', 'B'
 ]
 
-const reorderBaseNotesByKey = (key) => {
+export const reorderBaseNotesByKey = (key) => {
     const index = baseNotes.indexOf(key)
     const part1 = baseNotes.slice(index)
     const part2 = baseNotes.slice(0, index)
     const result = part1.concat(part2)
-    console.log('notes in harmonicas key of:', key, ' ', result);
+    // console.log('notes in harmonicas key of:', key, ' ', result);
     return result
 }
 
-const layoutPattern = [2, 1, 3, 4, 6, 5, 6, 7, 9, 8, 10, 11, 2, 1, 12, 1]
+export const layoutPattern = [2, 1, 3, 4, 6, 5, 6, 7, 9, 8, 10, 11, 2, 1, 12, 1]
 
-const scales = {
+export const scales = {
     'Major Scale': ['whole', 'whole', 'half', 'whole', 'whole', 'whole', 'half'],
     'Natural Minor Scale': ['whole', 'half', 'whole', 'whole', 'half', 'whole', 'whole',]
 }
 
-const noteSteps = [
+export const noteSteps = [
     { note: 'A', whole: 'B', half: 'A#B♭' },
     { note: 'A#B♭', whole: 'C', half: 'B' },
     { note: 'B', whole: 'C#/D♭', half: 'C' },
@@ -36,7 +36,7 @@ const noteSteps = [
 ]
 
 
-function notesFinder(playKey, scale) {
+export function notesFinder(playKey, scale) {
 
     let playNotes = [playKey]
     let currentNote = playKey
@@ -50,14 +50,14 @@ function notesFinder(playKey, scale) {
 }
 
 
-function chekBackwards(index, highlightedArr, note) {
+export function chekBackwards(index, highlightedArr, note) {
     // console.log("check backwards run...")
     if (highlightedArr[index - 2] && highlightedArr[index - 2].note === note) {
         return highlightedArr[index - 2]
     }
     return null
 }
-function checkAheadPreferred(index, highlightedArr, note, nextNote) {
+export function checkAheadPreferred(index, highlightedArr, note, nextNote) {
     let prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
     let pushingToSequence
     for (let i = index + 1; i < index + 3; i++) {
@@ -71,13 +71,48 @@ function checkAheadPreferred(index, highlightedArr, note, nextNote) {
 }
 
 
-module.exports = {
-    baseNotes,
-    reorderBaseNotesByKey,
-    layoutPattern,
-    scales, 
-    notesFinder,
-    noteSteps, 
-    chekBackwards,
-    checkAheadPreferred
+export const prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
+
+
+export const resultSequenceFinder = (notesInPlay, highlighted, noteSequence = [], order = 0, blocksQty) => {
+    
+    for (let i = 0; i < highlighted.length; i++) {
+        // console.log("looking for note:", notesInPlay[order], "at ", highlighted[i].note)
+        if (highlighted[i].note === notesInPlay[order]) {
+
+            if (!prefferedPositions.includes(highlighted[i].pos) && checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
+
+                noteSequence.push(checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1]))
+
+                order++
+            } else {
+                noteSequence.push(highlighted[i])
+
+                order++
+            }
+        }
+        if (chekBackwards(i, highlighted, notesInPlay[order])) {
+            noteSequence.push(chekBackwards(i, highlighted, notesInPlay[order]))
+
+            i = i - 1
+            order++
+        }
+
+    }
+
+
+    console.log("Note sequence", noteSequence)
+    // repeat sequence blocksQty times:
+    let extendedSequence = [...noteSequence]
+
+    for (let i = 1; i < blocksQty; i++) {
+        noteSequence.forEach(note => {
+            let newBlock = note.block + i
+            let newNoteEl = { 'note': note.note, 'block': newBlock, 'pos': note.pos }
+            // console.log("Pushing into extended sequence", newNoteEl)
+            extendedSequence.push(newNoteEl)
+        })
+    }
+    console.log("Full sequence", extendedSequence)
+    return extendedSequence
 }

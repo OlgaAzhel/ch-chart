@@ -2,7 +2,7 @@
     font-size: 16px;
 }
 
-#chart {
+.chart {
     background-color: #D3C1AE;
     width: 333px;
     height: 333px;
@@ -19,7 +19,7 @@
     /* transform: rotate(90deg); */
 }
 
-#cell {
+.cell {
     margin: 0;
     border: solid rgb(255, 255, 255) 3px;
     width: 80px;
@@ -52,12 +52,14 @@
     background-color: yellowgreen;
 }
 
-#layout {
+.layout {
     width: 1000px;
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    border: solid grey 1px;
+    background-color: aliceblue;
 }
 
 .note-span {
