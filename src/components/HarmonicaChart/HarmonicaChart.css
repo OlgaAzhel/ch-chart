@@ -1,7 +1,8 @@
 
 
 .chart {
-    background-color: #D3C1AE;
+    background-color: #c1c1c1;
+    border-radius: 3px;
     width: 333px;
     height: 333px;
     padding: 0;
@@ -23,6 +24,7 @@
     width: 80px;
     height: 80px;
     padding-top: 12px;
+    text-align: center;
     /* transform: rotate(270deg); */
 }
 
@@ -34,7 +36,7 @@
     justify-content: space-around;
     align-items: center;
     margin-top: 3rem;
-    margin-bottom: 3rem;
+
 
 }
 
@@ -47,7 +49,7 @@
 }
 
 .highlighted {
-    background-color: yellowgreen;
+    background-color: rgb(234, 225, 215);
 }
 
 .layout {
@@ -56,14 +58,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    border: solid grey 1px;
-    background-color: aliceblue;
+    background-color: rgb(250, 250, 250);
 }
 
 .note-span {
     font-size: larger;
-    background-color: yellow;
     margin-left: 1rem;
+
     
 }
 

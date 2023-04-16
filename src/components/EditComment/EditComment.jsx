@@ -4,7 +4,7 @@ import * as commentsAPI from '../../utilities/comments-api';
 export default function EditComment({ user, comment, comments, setComments, setEdit, getComments }) {
     const [editFormData, setEditFormData] = useState({
         text: comment.text,
-        rating: comment.rating,
+        rate: comment.rate,
         user: user,
         id: comment._id
     });

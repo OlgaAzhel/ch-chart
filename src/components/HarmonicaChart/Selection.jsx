@@ -6,9 +6,11 @@ export const Selection = ({ label, options, value, onSelect }) => {
     
     return <>
 
-        <div className="setting">
-            <label>{label}:</label>
-            <select name="play-scale"
+        <div class="shadow-sm p-3 mb-5 bg-body-tertiary rounded w-25 p-3 mx-auto p-2">
+            <label><h5>{label}:</h5></label>
+            <select 
+                className="form-select"
+            name="play-scale"
                 onChange={onSelect}
                 value={value}
             >

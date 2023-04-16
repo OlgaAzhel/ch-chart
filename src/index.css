@@ -172,3 +172,9 @@ button[type="submit"] {
       background-repeat: no-repeat;
       background-position: 100% 100%;
 }
+
+.notes-plate {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}

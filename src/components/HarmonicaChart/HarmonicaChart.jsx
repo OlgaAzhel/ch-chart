@@ -90,7 +90,10 @@ export default function HarmonicaChart() {
 
     return (
         <>
-            <p>THIS IS YOUR HARMONICA NOTES LAYOUT</p>
+            <div className="d-flex mt-5 justify-content-center">
+                <h5>Choose your harmonica settings and scale/key you would like to play:</h5>
+            </div>
+
             <section id="settings">
                 <Selection
                     label='Harmonica key'
@@ -115,7 +118,9 @@ export default function HarmonicaChart() {
                 
             </section>
 
-            <CurrentKeyNotes playNotes={playNotes} />
+            <div className='d-flex justify-content-center'>  
+                <CurrentKeyNotes playNotes={playNotes} />
+            </div>
 
             <section className="layout">
 
