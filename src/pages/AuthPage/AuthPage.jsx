@@ -14,7 +14,7 @@ export default function AuthPage({ setUser }) {
   return (
     
     <main>
-      <button onClick={handleClick}>{view}</button>
+      <button onClick={handleClick} class="btn btn-secondary">{view}</button>
       <h1>AuthPage</h1>
       { (view === 'LOG IN')? <SignUpForm setUser={ setUser }/>
       :

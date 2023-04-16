@@ -1,6 +1,4 @@
-* {
-    font-size: 16px;
-}
+
 
 .chart {
     background-color: #D3C1AE;
@@ -69,15 +67,3 @@
     
 }
 
-svg {
-    width: 5;
-    height: 3;
-}
-
-path {
-
-}
-
-g {
-
-}

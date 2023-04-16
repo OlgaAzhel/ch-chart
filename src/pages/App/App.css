@@ -1,6 +1,6 @@
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 .App-logo {
   height: 40vmin;
@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.comment-list {
+  width: 80%;
+margin: auto;
+}
+
+.main-section {
+  width: 80%;
+margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.new-cmt-form {
+  width: 100%;
+    margin-right: 0;
+}
+
+
+

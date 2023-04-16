@@ -1,4 +1,4 @@
-import '../CommentListItem/CommentListItem.css'
+
 import EditComment from "../EditComment/EditComment"
 import * as commentsAPI from "../../utilities/comments-api"
 import { useState } from 'react'
@@ -30,33 +30,63 @@ export default function CommentListItem({ user, comment, comments, setComments, 
         }
     };
 
+    function starGen(num) {
+        let stars = []
+        for (let i = parseInt(num); i > 0; i--) {
+
+            stars.push(<span key={`star+${i}`}>⭐</span>)
+
+        }
+        return stars
+    }
+
     return (
-        <li className="CommentListItem">
-            <div className="comment-ctr">
+
+        <div className="comment-ctr ">
+
+            <div class="card mb-4 opacity-75">
                 {
                     edit ?
-                <EditComment comment={comment} comments={comments} setComments={setComments} getComments={getComments} setEdit={setEdit}/>
-:
-                <>
-                    <span className='user-name'>{user.name}</span>
-                    <span className='comment-text'>{comment.text}</span>
-
-                    <span className='date-time'>{formattedDateTime}</span>
-                    <span className='comment-rate'>Rating: {comment.rate}</span>
-
-                    {
-                        user._id === comment.user &&
-                        <div className='buttons'>
-                            <button onClick={handleEdit}>EDIT COMMENT</button>
-                            <button onClick={handleClick}>❌ DELETE</button>
+                        <div class="row">
+                            <EditComment comment={comment} comments={comments} setComments={setComments} getComments={getComments} setEdit={setEdit} />
                         </div>
-                    }
-                </>
+                        :
+
+                        <div class="row">
+                            <div class="col-sm-2 text-center">
+                                <p class="small text-muted mb-0">{comment.rate}</p>
+                                {
+                                    starGen(comment.rate)
+                                }
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div><span class="fw-bolder">{user.name}&nbsp;&nbsp;&nbsp; </span><span class="fw-light">{formattedDateTime}</span></div>
+                                <p>{comment.text}</p>
+
+                            </div>
+
+
+                            {
+                                user._id === comment.user &&
+
+
+                                <div class="d-flex flex-row-reverse">
+                                    <button onClick={handleEdit} class="btn btn-sm btn-secondary">EDIT COMMENT</button>
+                                    <button onClick={handleClick} class="btn btn-sm btn-outline-secondary">DELETE</button>
+
+                                </div>
+                            }
+
+                        </div>
                 }
 
-
-
             </div>
-        </li>
+
+
+
+
+        </div>
+
     )
 }
