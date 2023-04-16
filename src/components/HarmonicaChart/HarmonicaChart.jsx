@@ -9,9 +9,9 @@ import { Layout } from './Layout';
 
 
 export default function HarmonicaChart() {
-    const [scale, setScale] = useState('Major Scale')
-    const [playKey, setPlayKey] = useState('C')
-    const [harmonicaKey, setHarmonicaKey] = useState('C')
+    const [scale, setScale] = useState(localStorage.getItem('scale') || 'Major Scale')
+    const [playKey, setPlayKey] = useState(localStorage.getItem('playKey') || 'C')
+    const [harmonicaKey, setHarmonicaKey] = useState(localStorage.getItem('harmonicaKey') || 'C')
     const [playNotes, setPlayNotes] = useState(notesFinder(playKey, scale))
     const notes = reorderBaseNotesByKey(harmonicaKey)
 
@@ -19,17 +19,20 @@ export default function HarmonicaChart() {
     function harmonicaKeyChange(evt) {
         const newHarmonicaKey = evt.target.value
         setHarmonicaKey(newHarmonicaKey)
+        localStorage.setItem('harmonicaKey', newHarmonicaKey);
     }
     function playScaleChange(evt) {
         const newScale = evt.target.value
         setScale(newScale)
         setHarmonicaKey(harmonicaKey)
         setPlayNotes(notesFinder(playKey, newScale))
+        localStorage.setItem('scale', newScale);
     }
     function playKeyChange(evt) {
         const newPlayKey = evt.target.value
         setPlayKey(newPlayKey)
         setPlayNotes(notesFinder(newPlayKey, scale))
+        localStorage.setItem('playKey', newPlayKey);
     }
     const blockQty = 3
 
