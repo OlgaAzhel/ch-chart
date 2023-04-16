@@ -1,6 +1,6 @@
 import './HarmonicaChart.css'
 import { useState } from "react";
-import { baseNotes, checkAheadPreferred, chekBackwards, layoutPattern, notesFinder, reorderBaseNotesByKey, resultSequenceFinder, scales } from '../../utilities/harmonica-service'
+import { baseNotes, layoutPattern, notesFinder, reorderBaseNotesByKey, resultSequenceFinder, scales } from '../../utilities/harmonica-service'
 import Xarrow from "react-xarrows";
 import Selection from './Selection';
 import CurrentKeyNotes from './CurrentKeyNotes';
@@ -23,6 +23,7 @@ export default function HarmonicaChart() {
     function playScaleChange(evt) {
         const newScale = evt.target.value
         setScale(newScale)
+        setHarmonicaKey(harmonicaKey)
         setPlayNotes(notesFinder(playKey, newScale))
     }
     function playKeyChange(evt) {
@@ -62,10 +63,7 @@ export default function HarmonicaChart() {
     let resultSequence = resultSequenceFinder(playNotes, currentHighlighted, [], 0, blockQty)
 
     // console.log("Layout pattern:", layoutPattern.length)
-    
-    let sortedResultSequence = resultSequence.sort((a,b) => a.block - b.block || a.pos - b.pos)
-    // console.log("Note Sequence:", resultSequence)
-    // console.log("Note SORTED Sequence:", sortedResultSequence)
+
 
     let notesLayout = []
     for (let block = 1; block <= blockQty; block++) {
@@ -130,6 +128,7 @@ export default function HarmonicaChart() {
                                     key={idx}
 
                                 >
+                                    {i.note}
                                     {
                                         resultSequence.find((el, index) => {
                                             return el.note === i.note && el.pos === idx + 1 && index !== 0 && el.block === 1
@@ -151,6 +150,7 @@ export default function HarmonicaChart() {
                                         </span>
 
                                     }
+                                    
                                     {
                                         resultSequence.find((el, index) => {
                                             return el.note === i.note && el.pos === idx + 1 && index === 0 && el.block === 1
@@ -172,7 +172,7 @@ export default function HarmonicaChart() {
                                         </span>
                                     }
 
-                                    {i.note}
+                                    
                                 </div>
                                 }
 
@@ -198,6 +198,7 @@ export default function HarmonicaChart() {
                                     className="highlighted cell"
                                     key={idx}
                                 >
+                                    {i.note}
                                     {
                                         resultSequence.find((el, index) => {
                                             return el.note === i.note && el.pos === idx + 1 && index !== resultSequence.length / 3 && el.block === 2
@@ -239,7 +240,7 @@ export default function HarmonicaChart() {
                                         </span>
                                     }
 
-                                    {i.note}
+                                    
                                 </div>
                                 }
 
@@ -265,6 +266,7 @@ export default function HarmonicaChart() {
                                     className="cell highlighted"
                                     key={idx}
                                 >
+                                    {i.note}
                                     {
                                         resultSequence.find((el, index) => {
 
@@ -309,7 +311,7 @@ export default function HarmonicaChart() {
                                         </span>
                                     }
 
-                                    {i.note}
+                                    
                                 </div>
                                 }
 

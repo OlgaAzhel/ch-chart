@@ -49,7 +49,6 @@ export function notesFinder(playKey, scale) {
     return playNotes
 }
 
-
 export function chekBackwards(index, highlightedArr, note) {
     // console.log("check backwards run...")
     if (highlightedArr[index - 2] && highlightedArr[index - 2].note === note) {
@@ -57,6 +56,8 @@ export function chekBackwards(index, highlightedArr, note) {
     }
     return null
 }
+
+
 export function checkAheadPreferred(index, highlightedArr, note, nextNote) {
     let prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
     let pushingToSequence
@@ -77,7 +78,11 @@ export const prefferedPositions = [2, 3, 6, 7, 10, 11, 14, 15]
 export const resultSequenceFinder = (notesInPlay, highlighted, noteSequence = [], order = 0, blocksQty) => {
     
     for (let i = 0; i < highlighted.length; i++) {
-        // console.log("looking for note:", notesInPlay[order], "at ", highlighted[i].note)
+        console.log("looking for note:", notesInPlay[order], "at ", highlighted[i].note)
+        // if (notesInPlay[order] === 'G#A♭' && notesInPlay[order-1] === 'G' ) {
+        //     noteSequence.push(highlighted[i-2])
+        //     order++
+        // }
         if (highlighted[i].note === notesInPlay[order]) {
 
             if (!prefferedPositions.includes(highlighted[i].pos) && checkAheadPreferred(i, highlighted, notesInPlay[order], notesInPlay[order + 1])) {
@@ -103,16 +108,27 @@ export const resultSequenceFinder = (notesInPlay, highlighted, noteSequence = []
 
     console.log("Note sequence", noteSequence)
     // repeat sequence blocksQty times:
-    let extendedSequence = [...noteSequence]
 
-    for (let i = 1; i < blocksQty; i++) {
-        noteSequence.forEach(note => {
-            let newBlock = note.block + i
-            let newNoteEl = { 'note': note.note, 'block': newBlock, 'pos': note.pos }
-            // console.log("Pushing into extended sequence", newNoteEl)
-            extendedSequence.push(newNoteEl)
-        })
+    console.log("EXTENDED BEFORE ADDING NEXT BLOCKS",[...noteSequence] )
+
+
+    let extendedSequenceFinder = (seq) => {
+        let newSeq = []
+        for (let i = 1; i < blocksQty; i++) {
+            seq.forEach(note => {
+                let newBlock = note.block + i
+                let newNoteEl = { 'note': note.note, 'block': newBlock, 'pos': note.pos }
+                console.log("Pushing into extended sequence",newSeq, newNoteEl)
+                newSeq.push(newNoteEl)
+            })
+        }
+        console.log("Full sequence AFTER:", seq.concat(newSeq))
+        return seq.concat(newSeq)
     }
-    console.log("Full sequence", extendedSequence)
+
+
+
+    const extendedSequence = extendedSequenceFinder(noteSequence)
+    
     return extendedSequence
 }
