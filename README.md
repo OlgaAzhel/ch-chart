@@ -1,38 +1,32 @@
-# MERN-Stack Infrastructure
+# Harmonica Key Finder
 
-Clone this repo to provide the starter code for a comprehensive MERN-Stack project including token-based authentication.
-7. Using mern-infrastructure to Create MERN-Stack Projects in the Future
-Here's the process to create a new MERN-Stack project that starts with the infrastructure code:
+Harmonika Key Finder can be a great tool for musicians of all skill who want to explore different keys and play scales quickly and easily. It's a visualizer of a chromatic harmonica tuned into various keys, and a hole chart for any Key to play in on top of it. Major and Natural Minor keys are supported. This is especially useful for finding a good combination of layout and key option on Lekholm DM48 MIDI instrument, but can be very helpful with any chromatic harmonica.
 
-Clone the mern-infrastructure repo:
 
-git clone <url of mern-infrastructure> <name-of-project>
-👀 The folder created will be same as <name-of-project> instead of mern-infrastructure
+### Screenshots
 
-cd <name-of-project>
+![alt text](./public/images/ch-chart-1.jpg)
+![alt text](./public/images/ch-chart-2.jpg)
 
-Install the Node modules: npm i
+## 👀 Take a look at FlyByExpress [HERE](https://harmonica-key-finder.herokuapp.com/)
 
-Create a .env (touch .env) and add entries for DATABASE_URL and SECRET
 
-Update the "name": "mern-infrastructure" in package.json to the name of your project.
+## Technologies Used
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![React](https://img.shields.io/badge/-ReactJs-61DAFB?logo=react&logoColor=white&style=for-the-badge)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![NPM](https://img.shields.io/badge/NPM-%23000000.svg?style=for-the-badge&logo=npm&logoColor=white)
+![Heroku](https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 
-Build the React code to create the build folder, otherwise the Express server will not start up: npm run build
 
-Create a new repo on your personal GH account.
+## Next spets:
 
-Copy the new GH repo's URL.
-
-Update the remote's URL:
-
-git remote set-url origin <paste the copied GH url>
-Make the initial commit:
-
-git add -A && git commit -m "Initial commit"
-Push for the first time:
-
-git push -u origin main
-Remember that the Express server won't start without error until the build folder used by Express is created by running:
-
-npm run build
-Have fun coding your new project and don't forget to make frequent commits!
+Attach different library that will ensure reliable arrow generate. Add more scales. Implement possibility to save user's setups into DB.
+Mark blow, draw, slider.
