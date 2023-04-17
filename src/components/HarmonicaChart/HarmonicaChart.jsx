@@ -347,12 +347,12 @@ export default function HarmonicaChart() {
             <br></br>
 
             
-            <Layout 
+            {/* <Layout 
                 harmonicaKey={harmonicaKey} 
                 playKey={playKey} 
                 scaleMode={scale}
                 playNotes={playNotes}
-            />
+            /> */}
         </>
     )
 }

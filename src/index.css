@@ -82,25 +82,25 @@ ul {
   text-align: center;
   font-size: 2vmin;
 }
-
+*/
 .form-container {
   padding: 3vmin;
   background-color: var(--tan-1);
   border: .1vmin solid var(--tan-3);
   border-radius: 1vmin;
 }
-
 p.error-message {
   color: var(--orange);
   text-align: center;
 }
+/*
 
 form {
   display: grid;
   grid-template-columns: 1fr 3fr;
   gap: 1.25vmin;
   color: var(--text-light);
-}
+
 
 label {
   font-size: 2vmin;
@@ -135,10 +135,7 @@ input:focus {
   outline: none;
   cursor: pointer;
 }  */
-.btn {
-    margin: 5px;
-      padding: 2px;
-}
+
 
 
 /*
@@ -171,6 +168,15 @@ button[type="submit"] {
     background: url(../public/img_166085_resize-740-370.jpeg);
       background-repeat: no-repeat;
       background-position: 100% 100%;
+}
+
+.auth {
+    width: 80%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
 }
 
 .notes-plate {

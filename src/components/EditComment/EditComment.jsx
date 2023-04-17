@@ -44,7 +44,7 @@ export default function EditComment({ user, comment, comments, setComments, setE
                 <label className="control-label" for="rate">Edit rate:</label>
                 <div className="d-flex justify-content-start">
                     <select name="rate"
-                        className="form-control w-25 p-3"
+                        className="form-control w-25"
                         onChange={handleChange}
                         required
                         value={editFormData.rate}

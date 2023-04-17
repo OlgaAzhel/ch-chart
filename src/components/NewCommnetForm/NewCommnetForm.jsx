@@ -51,8 +51,8 @@ export default function NewCommnetForm({ user, comments, setComments, getComment
                 <label className="control-label" for="rate">Rate this app:</label>
                 <div className="d-flex justify-content-start">
                     <select  name="rate"
-                        className="form-control w-25 p-3"
-                        id="rate"
+                        className="form-control w-25"
+
                         onChange={handleChange}
                         required
                         value={formData.rate}
