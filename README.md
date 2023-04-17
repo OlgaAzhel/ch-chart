@@ -5,8 +5,8 @@ Harmonika Key Finder can be a great tool for musicians of all skill who want to 
 
 ### Screenshots
 
-![alt text](./public/images/ch-chart-1.jpg)
-![alt text](./public/images/ch-chart-2.jpg)
+![alt text](./public/ch-chart-1.jpg)
+![alt text](./public/ch-chart-2.jpg)
 
 ## 👀 Take a look at FlyByExpress [HERE](https://harmonica-key-finder.herokuapp.com/)
 
