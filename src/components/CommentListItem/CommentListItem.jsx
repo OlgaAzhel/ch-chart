@@ -61,7 +61,7 @@ export default function CommentListItem({ user, comment, comments, setComments, 
                             </div>
 
                             <div className="col-sm-6">
-                                <div><span className="fw-bolder">{user.name}&nbsp;&nbsp;&nbsp; </span><span className="fw-light">{formattedDateTime}</span></div>
+                                <div><span className="fw-bolder">{comment.author}&nbsp;&nbsp;&nbsp; </span><span className="fw-light">{formattedDateTime}</span></div>
                                 <p>{comment.text}</p>
 
                             </div>

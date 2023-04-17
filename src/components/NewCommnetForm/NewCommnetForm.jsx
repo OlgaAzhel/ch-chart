@@ -13,21 +13,24 @@ export default function NewCommnetForm({ user, comments, setComments, getComment
         const newFormData = {
             ...formData,
             [evt.target.name]: evt.target.value,
-            user: user
+            user: user,
+            author: user.name
         };
         setFormData(newFormData);
+        console.log(newFormData)
     }
-
+ 
     async function handleAddCommnet(evt) {
         evt.preventDefault();
+        console.log("THESE ARE NEW COMMENTS:")
         const newComment = await commentsAPI.createComment(formData);
         const newCommnets = await getComments()
-        console.log("THESE ARE NEW COMMENTS:", newCommnets)
         setComments([...newCommnets])
         setFormData({
             text: "",
             rate: 3,
-            user: user
+            user: user,
+            author: user.name
         });
     }
 
