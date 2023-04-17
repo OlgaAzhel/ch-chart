@@ -15,18 +15,18 @@ export default function NavBar({ user, setUser }) {
     setUser(null)
   }
   return (
-    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-center">
-      <a class="navbar-brand" href="/">{renderImg(harmonicaIcon)}</a>
-      <ul class="nav justify-content-center">
-        <li class="nav-item">
-          <Link class="nav-link active link-dark" aria-current="page" to="/mystudio" element={<MyStudioPage />}>My Studio</Link>
+    <nav className="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-center">
+      <a className="navbar-brand" href="/">{renderImg(harmonicaIcon)}</a>
+      <ul className="nav justify-content-center">
+        <li className="nav-item">
+          <Link className="nav-link active link-dark" aria-current="page" to="/mystudio" element={<MyStudioPage />}>My Studio</Link>
         </li>
-        <li class="nav-item">
-          <Link class="nav-link active link-dark" aria-current="page" to="/" element={<MainPage />}>Main</Link>
+        <li className="nav-item">
+          <Link className="nav-link active link-dark" aria-current="page" to="/" element={<MainPage />}>Main</Link>
 
         </li>
-        <li class="nav-item">
-          <Link class="nav-link active link-dark" aria-current="page" to="" onClick={handleLogOut}>Log Out</Link>
+        <li className="nav-item">
+          <Link className="nav-link active link-dark" aria-current="page" to="" onClick={handleLogOut}>Log Out</Link>
         </li>
       </ul>
     </nav>

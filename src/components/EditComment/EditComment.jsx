@@ -28,11 +28,11 @@ export default function EditComment({ user, comment, comments, setComments, setE
     }
 
     return (
-        <form onSubmit={handleEditComment} class="form-horizontal shadow-sm p-3 mb-5 bg-body-tertiary rounded bg-warning-subtle">
-            <div class="form-group ">
-                <label class="control-label" for="commnet-body">Edit your comment:</label>
+        <form onSubmit={handleEditComment} className="form-horizontal shadow-sm p-3 mb-5 bg-body-tertiary rounded bg-warning-subtle">
+            <div className="form-group ">
+                <label className="control-label" for="commnet-body">Edit your comment:</label>
 
-                <textarea class="form-control" rows="3"
+                <textarea className="form-control" rows="3"
                     name="text"
                     value={editFormData.text}
                     placeholder="New Note"
@@ -40,11 +40,11 @@ export default function EditComment({ user, comment, comments, setComments, setE
                     required
                 />
             </div>
-            <div class="form-group">
-                <label class="control-label" for="rate">Edit rate:</label>
-                <div class="d-flex justify-content-start">
+            <div className="form-group">
+                <label className="control-label" for="rate">Edit rate:</label>
+                <div className="d-flex justify-content-start">
                     <select name="rate"
-                        class="form-control w-25 p-3"
+                        className="form-control w-25 p-3"
                         onChange={handleChange}
                         required
                         value={editFormData.rate}
@@ -55,7 +55,7 @@ export default function EditComment({ user, comment, comments, setComments, setE
                         <option value="4">4</option>
                         <option value="5">5</option>
                     </select>
-                    <button type="submit" class="btn btn-secondary">SAVE CHANGES</button>
+                    <button type="submit" className="btn btn-secondary">SAVE CHANGES</button>
                 </div>
             </div>
         </form>

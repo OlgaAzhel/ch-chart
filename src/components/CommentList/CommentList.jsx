@@ -21,7 +21,7 @@ export default function CommentList({comments, setComments, user, getComments}) 
                 <NewCommnetForm user={user} setComments={setComments} getComments={commentsAPI.getComments} />
             <h4>Commnets:</h4>
 
-                <div class="row">{CommentListItems}</div>
+                <div className="row">{CommentListItems}</div>
             </div>
         </>
     )

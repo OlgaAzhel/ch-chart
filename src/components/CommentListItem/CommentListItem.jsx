@@ -44,24 +44,24 @@ export default function CommentListItem({ user, comment, comments, setComments, 
 
         <div className="comment-ctr ">
 
-            <div class="card mb-4 opacity-75">
+            <div className="card mb-4 opacity-75">
                 {
                     edit ?
-                        <div class="row">
+                        <div className="row">
                             <EditComment comment={comment} comments={comments} setComments={setComments} getComments={getComments} setEdit={setEdit} />
                         </div>
                         :
 
-                        <div class="row">
-                            <div class="col-sm-2 text-center">
-                                <p class="small text-muted mb-0">{comment.rate}</p>
+                        <div className="row">
+                            <div className="col-sm-2 text-center">
+                                <p className="small text-muted mb-0">{comment.rate}</p>
                                 {
                                     starGen(comment.rate)
                                 }
                             </div>
 
-                            <div class="col-sm-6">
-                                <div><span class="fw-bolder">{user.name}&nbsp;&nbsp;&nbsp; </span><span class="fw-light">{formattedDateTime}</span></div>
+                            <div className="col-sm-6">
+                                <div><span className="fw-bolder">{user.name}&nbsp;&nbsp;&nbsp; </span><span className="fw-light">{formattedDateTime}</span></div>
                                 <p>{comment.text}</p>
 
                             </div>
@@ -71,9 +71,9 @@ export default function CommentListItem({ user, comment, comments, setComments, 
                                 user._id === comment.user &&
 
 
-                                <div class="d-flex flex-row-reverse">
-                                    <button onClick={handleEdit} class="btn btn-sm btn-secondary">EDIT COMMENT</button>
-                                    <button onClick={handleClick} class="btn btn-sm btn-outline-secondary">DELETE</button>
+                                <div className="d-flex flex-row-reverse">
+                                    <button onClick={handleEdit} className="btn btn-sm btn-secondary">EDIT COMMENT</button>
+                                    <button onClick={handleClick} className="btn btn-sm btn-outline-secondary">DELETE</button>
 
                                 </div>
                             }

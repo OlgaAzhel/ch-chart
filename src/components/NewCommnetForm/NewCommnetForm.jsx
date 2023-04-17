@@ -33,11 +33,11 @@ export default function NewCommnetForm({ user, comments, setComments, getComment
 
     return (
 
-        <form onSubmit={handleAddCommnet} class="form-horizontal shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-            <div class="form-group ">
-                <label class="control-label" for="commnet-body">Create a comment:</label>
+        <form onSubmit={handleAddCommnet} className="form-horizontal shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+            <div className="form-group ">
+                <label className="control-label" for="commnet-body">Create a comment:</label>
 
-                <textarea class="form-control" rows="3"
+                <textarea className="form-control" rows="3"
                     id="commnet-body"
                     name="text"
                     value={formData.text}
@@ -47,11 +47,11 @@ export default function NewCommnetForm({ user, comments, setComments, getComment
                 />
 
             </div>
-            <div class="form-group">
-                <label class="control-label" for="rate">Rate this app:</label>
-                <div class="d-flex justify-content-start">
+            <div className="form-group">
+                <label className="control-label" for="rate">Rate this app:</label>
+                <div className="d-flex justify-content-start">
                     <select  name="rate"
-                        class="form-control w-25 p-3"
+                        className="form-control w-25 p-3"
                         id="rate"
                         onChange={handleChange}
                         required
@@ -64,7 +64,7 @@ export default function NewCommnetForm({ user, comments, setComments, getComment
                         <option value="5">5</option>
                     </select>
 
-                        <button type="submit" class="btn btn-secondary">ADD COMMENT</button>
+                        <button type="submit" className="btn btn-secondary">ADD COMMENT</button>
 
                 </div>
             </div>
